@@ -36,7 +36,7 @@
                     <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
                 <Grid.Resources>
-                    <Style BasedOn="{StaticResource {x:Type control:IconButton}}" TargetType="control:IconButton">
+                    <Style BasedOn="{StaticResource STIconButtonStyle}" TargetType="control:IconButton">
                         <Setter Property="Padding" Value="5" />
                     </Style>
                     <Style BasedOn="{StaticResource {x:Type Image}}" TargetType="Image">

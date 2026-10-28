@@ -42,7 +42,7 @@
                 Margin="12,0,0,0"
                 Padding="4"
                 Background="{DynamicResource {x:Static ui:ThemeKeys.ControlFillColorSecondaryBrushKey}}"
-                CornerRadius="4"
+                CornerRadius="{DynamicResource STRadiusControl}"
                 DockPanel.Dock="Left">
                 <ikw:SimpleStackPanel Orientation="Horizontal" Spacing="4">
                     <control:IconButton
@@ -69,7 +69,7 @@
                     <Button
                         Margin="4,0"
                         Padding="5,3"
-                        ui:ControlHelper.CornerRadius="6"
+                        ui:ControlHelper.CornerRadius="{DynamicResource STRadiusControl}"
                         ToolTip="{DynamicResource AllHistoryActions}">
                         <ui:FontIcon Icon="{x:Static ui:FluentSystemIcons.MoreHorizontal_20_Regular}" />
                         <ui:FlyoutService.Flyout>

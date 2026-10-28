@@ -58,7 +58,7 @@
             </ikw:SimpleStackPanel>
         </Border>
 
-        <Grid Margin="10,48,10,0">
+        <Grid Margin="16,56,16,8">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition d:Width="0">
@@ -106,7 +106,7 @@
                     Background="{DynamicResource {x:Static ui:ThemeKeys.CardBackgroundFillColorDefaultBrushKey}}"
                     BorderBrush="{DynamicResource {x:Static ui:ThemeKeys.CardStrokeColorDefaultBrushKey}}"
                     BorderThickness="1"
-                    CornerRadius="{DynamicResource {x:Static ui:ThemeKeys.ControlCornerRadiusKey}}">
+                    CornerRadius="{DynamicResource STRadiusCard}">
                     <Grid>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="*" />
@@ -359,7 +359,7 @@
                     Background="{DynamicResource {x:Static ui:ThemeKeys.CardBackgroundFillColorDefaultBrushKey}}"
                     BorderBrush="{DynamicResource {x:Static ui:ThemeKeys.CardStrokeColorDefaultBrushKey}}"
                     BorderThickness="1"
-                    CornerRadius="{DynamicResource {x:Static ui:ThemeKeys.ControlCornerRadiusKey}}">
+                    CornerRadius="{DynamicResource STRadiusCard}">
                     <Grid>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="*" />

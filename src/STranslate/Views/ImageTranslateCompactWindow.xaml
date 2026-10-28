@@ -44,7 +44,7 @@
     <Window.Resources>
         <Style
             x:Key="CompactToolbarIconButtonStyle"
-            BasedOn="{StaticResource {x:Type control:IconButton}}"
+            BasedOn="{StaticResource STIconButtonStyle}"
             TargetType="{x:Type control:IconButton}">
             <Setter Property="Width" Value="32" />
             <Setter Property="Height" Value="32" />

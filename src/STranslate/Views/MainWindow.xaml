@@ -95,9 +95,13 @@
             Command="{Binding ToggleAutoTranslateCommand}"
             Modifiers="{Binding HotkeySettings.AutoTranslateHotkey.Key, Converter={cnvt:StringToKeyBindingConverter}, ConverterParameter={x:Static cnvt:HotkeyMode.Modifiers}}" />
     </Window.InputBindings>
-    <Grid>
+    <Grid UseLayoutRounding="True">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
         <control:HeaderControl
-            Padding="6,4,6,0"
+            Padding="12,10,12,8"
             VerticalAlignment="Top"
             CloseCommand="{Binding CancelCommand}"
             CloseCommandParameter="{Binding ElementName=STWindow}"
@@ -127,49 +131,25 @@
             ToggleQuickServiceCommand="{Binding ToggleQuickServiceCommand}"
             VisibleActions="{Binding Settings.MainHeaderVisibleActions}" />
 
-        <ui:ScrollViewerEx Margin="10,37,0,5">
+        <ui:ScrollViewerEx Grid.Row="1" Margin="16,4,6,16" HorizontalScrollBarVisibility="Disabled">
             <StackPanel>
-                <!--  //  InputControl  //  -->
-                <control:InputControl
-                    x:Name="PART_Input"
-                    Margin="0,0,10,10"
-                    CopyCommand="{Binding CopyCommand}"
-                    CurrentFontSize="{Binding Settings.FontSize}"
-                    ExecuteCommand="{Binding TranslateCommand}"
-                    ForceExecuteCommand="{Binding TranslateCommand}"
-                    HasActivedVocabulary="{Binding VocabularyService.HasActivedVocabulary}"
-                    CanSelectIdentifiedLanguage="{Binding CanSelectIdentifiedLanguage}"
-                    IdentifiedLanguage="{Binding IdentifiedLanguage}"
-                    IdentifiedLanguageItemsSource="{Binding IdentifiedLanguageOptions}"
-                    IdentifiedLanguageState="{Binding CurrentIdentifiedLanguageState}"
-                    IsIdentify="{Binding IsIdentifyProcessing}"
-                    LanguageDetectorItemsSource="{Binding DataProvider.LanguageDetectors}"
-                    PlayAudioCancelCommand="{Binding PlayAudioCancelCommand}"
-                    PlayAudioCommand="{Binding PlayAudioCommand}"
-                    RemoveLineBreaksCommand="{Binding RemoveLineBreaksCommand}"
-                    RemoveSpacesCommand="{Binding RemoveSpacesCommand}"
-                    SaveToVocabularyCommand="{Binding SaveToVocabularyCommand}"
-                    SelectIdentifiedLanguageCommand="{Binding SelectIdentifiedLanguageCommand}"
-                    SelectLanguageDetectorCommand="{Binding SelectLanguageDetectorCommand}"
-                    SelectedIdentifiedLanguage="{Binding SelectedIdentifiedLanguage}"
-                    SelectedLanguageDetector="{Binding Settings.LanguageDetector, Mode=TwoWay}"
-                    SourceLanguage="{Binding Settings.SourceLang}"
-                    Text="{Binding InputText, UpdateSourceTrigger=PropertyChanged}"
-                    TranslateOnPaste="{Binding Settings.TranslateOnPaste}"
-                    Visibility="{Binding IsInputBoxVisible, Converter={cnvt:BoolToVisibilityConverter}}" />
-
                 <!--  // LangSelectControl //  -->
                 <Grid
-                    Margin="0,0,10,10"
+                    Margin="0,0,10,12"
                     Visibility="{Binding IsLanguageSelectControlVisible, Converter={cnvt:BoolToVisibilityConverter}}">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*" />
                         <ColumnDefinition Width="Auto" />
                         <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
 
                     <ComboBox
+                        MinHeight="36"
+                        ui:ControlHelper.CornerRadius="{DynamicResource STRadiusControl}"
                         HorizontalAlignment="Stretch"
                         HorizontalContentAlignment="Center"
                         DisplayMemberPath="Display"
@@ -179,7 +159,10 @@
 
                     <Button
                         Grid.Column="1"
-                        Margin="2,0"
+                        Width="36"
+                        Height="36"
+                        Margin="8,0"
+                        ui:ControlHelper.CornerRadius="{DynamicResource STRadiusPill}"
                         HorizontalAlignment="Center"
                         VerticalAlignment="Stretch"
                         Command="{Binding SwapLanguageCommand}"
@@ -189,6 +172,8 @@
 
                     <ComboBox
                         Grid.Column="2"
+                        MinHeight="36"
+                        ui:ControlHelper.CornerRadius="{DynamicResource STRadiusControl}"
                         HorizontalAlignment="Stretch"
                         HorizontalContentAlignment="Center"
                         DisplayMemberPath="Display"
@@ -197,8 +182,13 @@
                         SelectedValuePath="Value" />
 
                     <ListBox
-                        Grid.Column="3"
-                        Margin="2,0,0,0"
+                        Grid.Row="1"
+                        Grid.ColumnSpan="3"
+                        Margin="0,6,0,0"
+                        Padding="0"
+                        BorderThickness="0"
+                        ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                        ScrollViewer.VerticalScrollBarVisibility="Disabled"
                         Background="Transparent"
                         ItemsSource="{Binding TranslateService.Services}">
                         <ListBox.Resources>
@@ -214,13 +204,18 @@
                         </ListBox.Resources>
                         <ListBox.ItemsPanel>
                             <ItemsPanelTemplate>
-                                <StackPanel VerticalAlignment="Center" Orientation="Horizontal" />
+                                <WrapPanel VerticalAlignment="Center" Orientation="Horizontal" />
                             </ItemsPanelTemplate>
                         </ListBox.ItemsPanel>
                         <ListBox.ItemTemplate>
                             <DataTemplate>
                                 <Button
+                                    Width="36"
+                                    Height="36"
+                                    Margin="0,2,6,0"
                                     Padding="0"
+                                    ui:ControlHelper.CornerRadius="{DynamicResource STRadiusPill}"
+                                    AutomationProperties.Name="{Binding DisplayName}"
                                     Command="{Binding RelativeSource={RelativeSource AncestorType=Window}, Path=DataContext.TemporaryTranslateCommand}"
                                     CommandParameter="{Binding}"
                                     ToolTip="{Binding DisplayName}">
@@ -259,6 +254,35 @@
                         </ListBox.ItemTemplate>
                     </ListBox>
                 </Grid>
+
+                <!--  //  InputControl  //  -->
+                <control:InputControl
+                    x:Name="PART_Input"
+                    Margin="0,0,10,16"
+                    CopyCommand="{Binding CopyCommand}"
+                    CurrentFontSize="{Binding Settings.FontSize}"
+                    ExecuteCommand="{Binding TranslateCommand}"
+                    ForceExecuteCommand="{Binding TranslateCommand}"
+                    HasActivedVocabulary="{Binding VocabularyService.HasActivedVocabulary}"
+                    CanSelectIdentifiedLanguage="{Binding CanSelectIdentifiedLanguage}"
+                    IdentifiedLanguage="{Binding IdentifiedLanguage}"
+                    IdentifiedLanguageItemsSource="{Binding IdentifiedLanguageOptions}"
+                    IdentifiedLanguageState="{Binding CurrentIdentifiedLanguageState}"
+                    IsIdentify="{Binding IsIdentifyProcessing}"
+                    LanguageDetectorItemsSource="{Binding DataProvider.LanguageDetectors}"
+                    PlayAudioCancelCommand="{Binding PlayAudioCancelCommand}"
+                    PlayAudioCommand="{Binding PlayAudioCommand}"
+                    RemoveLineBreaksCommand="{Binding RemoveLineBreaksCommand}"
+                    RemoveSpacesCommand="{Binding RemoveSpacesCommand}"
+                    SaveToVocabularyCommand="{Binding SaveToVocabularyCommand}"
+                    SelectIdentifiedLanguageCommand="{Binding SelectIdentifiedLanguageCommand}"
+                    SelectLanguageDetectorCommand="{Binding SelectLanguageDetectorCommand}"
+                    SelectedIdentifiedLanguage="{Binding SelectedIdentifiedLanguage}"
+                    SelectedLanguageDetector="{Binding Settings.LanguageDetector, Mode=TwoWay}"
+                    SourceLanguage="{Binding Settings.SourceLang}"
+                    Text="{Binding InputText, UpdateSourceTrigger=PropertyChanged}"
+                    TranslateOnPaste="{Binding Settings.TranslateOnPaste}"
+                    Visibility="{Binding IsInputBoxVisible, Converter={cnvt:BoolToVisibilityConverter}}" />
 
                 <!--  // OutputControl //  -->
                 <control:OutputControl

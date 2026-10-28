@@ -13,9 +13,12 @@
         x:Key="QuickSettingsButtonStyle"
         BasedOn="{StaticResource {x:Type Button}}"
         TargetType="Button">
-        <Setter Property="Opacity" Value="0" />
-        <Setter Property="IsHitTestVisible" Value="False" />
+        <Setter Property="Opacity" Value="0.65" />
+        <Setter Property="IsHitTestVisible" Value="True" />
         <Style.Triggers>
+            <Trigger Property="IsKeyboardFocusWithin" Value="True">
+                <Setter Property="Opacity" Value="1" />
+            </Trigger>
             <DataTrigger Binding="{Binding RelativeSource={RelativeSource AncestorType=Expander}, Path=IsMouseOver}" Value="True">
                 <Setter Property="Opacity" Value="1" />
                 <Setter Property="IsHitTestVisible" Value="True" />
@@ -33,6 +36,8 @@
     <DataTemplate x:Key="ComboBoxTemplate" DataType="plugin:Service">
         <ComboBox
             MinWidth="120"
+            Margin="0,8,0,0"
+            HorizontalAlignment="Stretch"
             VerticalAlignment="Center"
             DisplayMemberPath="Name"
             ItemsSource="{Binding Plugin.Prompts}"
@@ -69,12 +74,12 @@
 
     <DataTemplate x:Key="DictionaryPluginTemplate" DataType="plugin:Service">
         <DataTemplate.Resources>
-            <Style BasedOn="{StaticResource {x:Type ui:FontIcon}}" TargetType="ui:FontIcon">
+            <Style TargetType="ui:FontIcon">
                 <Setter Property="FontSize" Value="{DynamicResource STControlFontSize16}" />
             </Style>
         </DataTemplate.Resources>
         <Expander
-            Margin="0,0,0,5"
+            Margin="0,0,0,12"
             Padding="0"
             HorizontalAlignment="Stretch"
             control:ExpanderAttach.HasResult="{Binding Plugin.DictionaryResult.ResultType, Converter={cnvt:DictionaryResultSuccessErrorBoolConverter}}"
@@ -102,63 +107,35 @@
                 </i:EventTrigger>
             </i:Interaction.Triggers>
             <Expander.Header>
-                <DockPanel>
-                    <ikw:SimpleStackPanel
-                        Background="Transparent"
-                        DockPanel.Dock="Left"
-                        Orientation="Horizontal"
-                        Spacing="10">
-                        <Image
-                            Width="{DynamicResource STControlFontSize18}"
-                            Height="{DynamicResource STControlFontSize18}"
-                            Source="{Binding IconPath, Converter={cnvt:ImagePathToSourceConverter}}" />
-                        <TextBlock
-                            VerticalAlignment="Center"
-                            FontSize="{DynamicResource STControlFontSize12}"
-                            Text="{Binding DisplayName}" />
-                        <!--  // https://learn.microsoft.com/zh-cn/windows/apps/design/style/segoe-fluent-icons-font //  -->
-                        <TextBlock
-                            VerticalAlignment="Center"
-                            FontFamily="{DynamicResource {x:Static ui:ThemeKeys.FluentSystemIconsKey}}"
-                            Foreground="{DynamicResource {x:Static ui:ThemeKeys.SystemControlErrorTextForegroundBrushKey}}"
-                            Text="&#xF618;"
-                            Visibility="{Binding Plugin.DictionaryResult.ResultType, Converter={cnvt:DictionaryResultTypeVisibilityConverter}, ConverterParameter=NoResult}" />
-                        <ui:ProgressRing
-                            Width="{DynamicResource STControlFontSize16}"
-                            Height="{DynamicResource STControlFontSize16}"
-                            IsActive="{Binding Plugin.DictionaryResult.IsProcessing}"
-                            Visibility="{Binding Plugin.DictionaryResult.IsProcessing, Converter={cnvt:BoolToVisibilityConverter}}" />
-                        <ikw:SimpleStackPanel
-                            Orientation="Horizontal"
-                            Spacing="5"
-                            Visibility="{Binding Plugin.DictionaryResult.Duration, Converter={cnvt:TimeSpanToVisibilityConverter}}">
-                            <ui:FontIcon Icon="{x:Static ui:FluentSystemIcons.Timer_24_Regular}" Opacity="0.6" />
-                            <TextBlock
-                                VerticalAlignment="Center"
-                                FontSize="{DynamicResource STControlFontSize10}"
-                                Opacity="0.7"
-                                Text="{Binding Plugin.DictionaryResult.Duration, StringFormat='\{0:ss\\.ff}'}" />
-                        </ikw:SimpleStackPanel>
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <Grid VerticalAlignment="Center">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <Image Width="{DynamicResource STControlFontSize18}" Height="{DynamicResource STControlFontSize18}" Source="{Binding IconPath, Converter={cnvt:ImagePathToSourceConverter}}" Grid.Column="0" />
+                        <TextBlock VerticalAlignment="Center" FontSize="{DynamicResource STControlFontSize12}" Text="{Binding DisplayName}" Grid.Column="1" Margin="8,0,0,0" TextTrimming="CharacterEllipsis" ToolTip="{Binding DisplayName}" MinWidth="0" />
+                        <TextBlock VerticalAlignment="Center" FontFamily="{DynamicResource {x:Static ui:ThemeKeys.FluentSystemIconsKey}}" Foreground="{DynamicResource {x:Static ui:ThemeKeys.SystemControlErrorTextForegroundBrushKey}}" Text="&#xF618;" Visibility="{Binding Plugin.DictionaryResult.ResultType, Converter={cnvt:DictionaryResultTypeVisibilityConverter}, ConverterParameter=NoResult}" Grid.Column="2" Margin="8,0,0,0" />
+                        <ui:ProgressRing Width="{DynamicResource STControlFontSize16}" Height="{DynamicResource STControlFontSize16}" IsActive="{Binding Plugin.DictionaryResult.IsProcessing}" Visibility="{Binding Plugin.DictionaryResult.IsProcessing, Converter={cnvt:BoolToVisibilityConverter}}" Grid.Column="3" Margin="8,0,0,0" />
+                    </Grid>
+                    <ikw:SimpleStackPanel Orientation="Horizontal" Spacing="5" Visibility="{Binding Plugin.DictionaryResult.Duration, Converter={cnvt:TimeSpanToVisibilityConverter}}" Grid.Column="1" Margin="8,0,0,0" VerticalAlignment="Center">
+                        <ui:FontIcon Icon="{x:Static ui:FluentSystemIcons.Timer_24_Regular}" Opacity="0.6" />
+                        <TextBlock VerticalAlignment="Center" FontSize="{DynamicResource STControlFontSize10}" Opacity="0.7" Text="{Binding Plugin.DictionaryResult.Duration, StringFormat='\{0:ss\\.ff}'}" />
                     </ikw:SimpleStackPanel>
-                    <ikw:SimpleStackPanel
-                        Background="Transparent"
-                        DockPanel.Dock="Right"
-                        FlowDirection="RightToLeft"
-                        Orientation="Horizontal"
-                        Spacing="10">
-                        <control:IconButton
-                            Padding="6"
-                            Command="{Binding RelativeSource={RelativeSource AncestorType=control:OutputControl}, Path=RetryCommand}"
-                            CommandParameter="{Binding}"
-                            Icon="{x:Static ui:FluentSystemIcons.ArrowSync_20_Regular}"
-                            IconSize="{DynamicResource STControlFontSize12}"
-                            ToolTip="{DynamicResource Retry}"
-                            Visibility="{Binding Plugin.DictionaryResult.ResultType, Converter={cnvt:DictionaryResultTypeVisibilityConverter}, ConverterParameter=Error}" />
-
-                        <Button
-                            Padding="5,4"
-                            FlowDirection="LeftToRight"
-                            Style="{StaticResource QuickSettingsButtonStyle}">
+                    <ikw:SimpleStackPanel Background="Transparent" FlowDirection="RightToLeft" Orientation="Horizontal" Spacing="10" Grid.Column="2" Margin="8,0,0,0">
+                        <control:IconButton Padding="6" Command="{Binding RelativeSource={RelativeSource AncestorType=control:OutputControl}, Path=RetryCommand}" CommandParameter="{Binding}" Icon="{x:Static ui:FluentSystemIcons.ArrowSync_20_Regular}" IconSize="{DynamicResource STControlFontSize12}" ToolTip="{DynamicResource Retry}" Visibility="{Binding Plugin.DictionaryResult.ResultType, Converter={cnvt:DictionaryResultTypeVisibilityConverter}, ConverterParameter=Error}" />
+                        <Button Padding="5,4" FlowDirection="LeftToRight" Style="{StaticResource QuickSettingsButtonStyle}" ToolTip="{DynamicResource ConfigureService}" AutomationProperties.Name="{DynamicResource ConfigureService}">
                             <ui:FontIcon FontSize="{DynamicResource STControlFontSize15}" Icon="{x:Static ui:FluentSystemIcons.Settings_20_Regular}" />
                             <Button.Resources>
                                 <s:BindingProxy x:Key="SvcProxy" Data="{Binding RelativeSource={RelativeSource AncestorType=Expander}, Path=DataContext}" />
@@ -166,11 +143,7 @@
                             </Button.Resources>
                             <ui:FlyoutService.Flyout>
                                 <ui:MenuFlyout Placement="BottomEdgeAlignedRight">
-                                    <MenuItem
-                                        Command="{Binding Source={StaticResource MainVmProxy}, Path=Data.SingleTranslateCommand}"
-                                        CommandParameter="{Binding Source={StaticResource SvcProxy}, Path=Data}"
-                                        Header="{DynamicResource ExecuteTranslation}"
-                                        IsEnabled="{Binding Source={StaticResource SvcProxy}, Path=Data.Plugin.DictionaryResult.ResultType, Converter={cnvt:DictionaryResultNoResultInverseBoolConverter}}">
+                                    <MenuItem Command="{Binding Source={StaticResource MainVmProxy}, Path=Data.SingleTranslateCommand}" CommandParameter="{Binding Source={StaticResource SvcProxy}, Path=Data}" Header="{DynamicResource ExecuteTranslation}" IsEnabled="{Binding Source={StaticResource SvcProxy}, Path=Data.Plugin.DictionaryResult.ResultType, Converter={cnvt:DictionaryResultNoResultInverseBoolConverter}}">
                                         <MenuItem.Icon>
                                             <ui:FontIcon Icon="{x:Static ui:FluentSystemIcons.Translate_24_Regular}" />
                                         </MenuItem.Icon>
@@ -180,32 +153,17 @@
                                         <MenuItem.Icon>
                                             <ui:FontIcon Icon="{x:Static ui:FluentSystemIcons.GlanceHorizontalSparkles_20_Regular}" />
                                         </MenuItem.Icon>
-                                        <MenuItem
-                                            Header="{DynamicResource TransExecAutomatic}"
-                                            IsCheckable="True"
-                                            IsChecked="{Binding Source={StaticResource SvcProxy}, Path=Data.Options.ExecMode, Converter={cnvt:ExecutionModeBoolConverter}, ConverterParameter=Automatic}" />
-                                        <MenuItem
-                                            Header="{DynamicResource TransExecManual}"
-                                            IsCheckable="True"
-                                            IsChecked="{Binding Source={StaticResource SvcProxy}, Path=Data.Options.ExecMode, Converter={cnvt:ExecutionModeBoolConverter}, ConverterParameter=Manual}" />
-                                        <MenuItem
-                                            Header="{DynamicResource TransExecPinned}"
-                                            IsCheckable="True"
-                                            IsChecked="{Binding Source={StaticResource SvcProxy}, Path=Data.Options.ExecMode, Converter={cnvt:ExecutionModeBoolConverter}, ConverterParameter=Pinned}" />
+                                        <MenuItem Header="{DynamicResource TransExecAutomatic}" IsCheckable="True" IsChecked="{Binding Source={StaticResource SvcProxy}, Path=Data.Options.ExecMode, Converter={cnvt:ExecutionModeBoolConverter}, ConverterParameter=Automatic}" />
+                                        <MenuItem Header="{DynamicResource TransExecManual}" IsCheckable="True" IsChecked="{Binding Source={StaticResource SvcProxy}, Path=Data.Options.ExecMode, Converter={cnvt:ExecutionModeBoolConverter}, ConverterParameter=Manual}" />
+                                        <MenuItem Header="{DynamicResource TransExecPinned}" IsCheckable="True" IsChecked="{Binding Source={StaticResource SvcProxy}, Path=Data.Options.ExecMode, Converter={cnvt:ExecutionModeBoolConverter}, ConverterParameter=Pinned}" />
                                     </MenuItem>
-                                    <MenuItem
-                                        Command="{Binding Source={StaticResource MainVmProxy}, Path=Data.NavigateCommand}"
-                                        CommandParameter="{Binding Source={StaticResource SvcProxy}, Path=Data}"
-                                        Header="{DynamicResource ConfigureService}">
+                                    <MenuItem Command="{Binding Source={StaticResource MainVmProxy}, Path=Data.NavigateCommand}" CommandParameter="{Binding Source={StaticResource SvcProxy}, Path=Data}" Header="{DynamicResource ConfigureService}">
                                         <MenuItem.Icon>
                                             <ui:FontIcon Icon="{x:Static ui:FluentSystemIcons.Settings_24_Regular}" />
                                         </MenuItem.Icon>
                                     </MenuItem>
                                     <Separator />
-                                    <MenuItem
-                                        Command="{Binding Source={StaticResource MainVmProxy}, Path=Data.CloseServiceCommand}"
-                                        CommandParameter="{Binding Source={StaticResource SvcProxy}, Path=Data}"
-                                        Header="{DynamicResource CloseService}">
+                                    <MenuItem Command="{Binding Source={StaticResource MainVmProxy}, Path=Data.CloseServiceCommand}" CommandParameter="{Binding Source={StaticResource SvcProxy}, Path=Data}" Header="{DynamicResource CloseService}">
                                         <MenuItem.Icon>
                                             <ui:FontIcon Icon="{x:Static ui:FluentSystemIcons.PictureInPictureExit_20_Regular}" />
                                         </MenuItem.Icon>
@@ -214,14 +172,15 @@
                             </ui:FlyoutService.Flyout>
                         </Button>
                     </ikw:SimpleStackPanel>
-                </DockPanel>
+
+                </Grid>
             </Expander.Header>
             <Expander.Content>
                 <Border
-                    x:Name="ContentBorder"
+                    x:Name="ContentBorder" Padding="6"
                     Background="{DynamicResource {x:Static ui:ThemeKeys.CardBackgroundFillColorDefaultBrushKey}}"
                     ClipToBounds="True"
-                    CornerRadius="4"
+                    CornerRadius="{DynamicResource STRadiusControl}"
                     RenderTransformOrigin="0.5,0">
                     <Border.RenderTransform>
                         <ScaleTransform ScaleY="1" />
@@ -243,7 +202,7 @@
                                 </MultiBinding>
                             </TextBox.FlowDirection>
                         </TextBox>
-                        <StackPanel Margin="8,8,8,4" Visibility="{Binding Plugin.DictionaryResult.ResultType, Converter={cnvt:DictionaryResultTypeVisibilityConverter}, ConverterParameter=Success}">
+                        <StackPanel Margin="14,12,14,12" Visibility="{Binding Plugin.DictionaryResult.ResultType, Converter={cnvt:DictionaryResultTypeVisibilityConverter}, ConverterParameter=Success}">
                             <!--  单词显示  -->
                             <TextBox
                                 Margin="0,0,0,12"
@@ -412,7 +371,7 @@
                                             Margin="0,2"
                                             Padding="8,6"
                                             Background="{DynamicResource {x:Static ui:ThemeKeys.CardBackgroundFillColorSecondaryBrushKey}}"
-                                            CornerRadius="4">
+                                            CornerRadius="{DynamicResource STRadiusControl}">
                                             <TextBlock
                                                 FontStyle="Italic"
                                                 Text="{Binding}"
@@ -437,12 +396,12 @@
 
     <DataTemplate x:Key="TransaltePluginTemplate" DataType="plugin:Service">
         <DataTemplate.Resources>
-            <Style BasedOn="{StaticResource {x:Type ui:FontIcon}}" TargetType="ui:FontIcon">
+            <Style TargetType="ui:FontIcon">
                 <Setter Property="FontSize" Value="{DynamicResource STControlFontSize16}" />
             </Style>
         </DataTemplate.Resources>
         <Expander
-            Margin="0,0,0,5"
+            Margin="0,0,0,12"
             Padding="0"
             HorizontalAlignment="Stretch"
             control:ExpanderAttach.HasResult="{Binding Plugin.TransResult.Text, Converter={cnvt:StringToBoolInverseConverter}}"
@@ -470,23 +429,26 @@
                 </i:EventTrigger>
             </i:Interaction.Triggers>
             <Expander.Header>
-                <DockPanel>
-                    <ikw:SimpleStackPanel
-                        Background="Transparent"
-                        DockPanel.Dock="Left"
-                        Orientation="Horizontal"
-                        Spacing="10">
-                        <Image
-                            Width="{DynamicResource STControlFontSize18}"
-                            Height="{DynamicResource STControlFontSize18}"
-                            Source="{Binding IconPath, Converter={cnvt:ImagePathToSourceConverter}}" />
-                        <TextBlock
-                            VerticalAlignment="Center"
-                            FontSize="{DynamicResource STControlFontSize12}"
-                            Text="{Binding DisplayName}" />
-                        <!--  条件显示的 ComboBox - 只有 LLM 插件才显示  -->
-                        <ContentPresenter Content="{Binding}" ContentTemplateSelector="{StaticResource OutputComboBoxSelector}" />
-                        <ui:ProgressRing>
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <Grid VerticalAlignment="Center">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <Image Width="{DynamicResource STControlFontSize18}" Height="{DynamicResource STControlFontSize18}" Source="{Binding IconPath, Converter={cnvt:ImagePathToSourceConverter}}" Grid.Column="0" />
+                        <TextBlock VerticalAlignment="Center" FontSize="{DynamicResource STControlFontSize12}" Text="{Binding DisplayName}" Grid.Column="1" Margin="8,0,0,0" TextTrimming="CharacterEllipsis" ToolTip="{Binding DisplayName}" MinWidth="0" />
+                        <ui:ProgressRing Grid.Column="2" Margin="8,0,0,0">
                             <ui:ProgressRing.Style>
                                 <Style BasedOn="{StaticResource {x:Type ui:ProgressRing}}" TargetType="ui:ProgressRing">
                                     <Style.Setters>
@@ -518,40 +480,24 @@
                                 </Style>
                             </ui:ProgressRing.Style>
                         </ui:ProgressRing>
-                        <StackPanel Orientation="Horizontal" Visibility="{Binding Plugin.TransResult.Duration, Converter={cnvt:TimeSpanToVisibilityConverter}}">
-                            <StackPanel.Resources>
-                                <Style BasedOn="{StaticResource {x:Type TextBlock}}" TargetType="TextBlock">
-                                    <Setter Property="VerticalAlignment" Value="Center" />
-                                    <Setter Property="FontSize" Value="{DynamicResource STControlFontSize10}" />
-                                    <Setter Property="Opacity" Value="0.7" />
-                                    <Setter Property="Margin" Value="5,0,0,0" />
-                                </Style>
-                            </StackPanel.Resources>
-                            <ui:FontIcon Icon="{x:Static ui:FluentSystemIcons.Timer_24_Regular}" Opacity="0.6" />
-                            <TextBlock Text="{Binding Plugin.TransResult.Duration, StringFormat='\{0:ss\\.ff}'}" />
-                            <TextBlock Text="/" Visibility="{Binding Plugin.TransBackResult.Duration, Converter={cnvt:TimeSpanToVisibilityConverter}}" />
-                            <TextBlock Text="{Binding Plugin.TransBackResult.Duration, StringFormat='\{0:ss\\.ff}'}" Visibility="{Binding Plugin.TransBackResult.Duration, Converter={cnvt:TimeSpanToVisibilityConverter}}" />
-                        </StackPanel>
-                    </ikw:SimpleStackPanel>
-                    <ikw:SimpleStackPanel
-                        Background="Transparent"
-                        DockPanel.Dock="Right"
-                        FlowDirection="RightToLeft"
-                        Orientation="Horizontal"
-                        Spacing="10">
-                        <control:IconButton
-                            Padding="6"
-                            Command="{Binding RelativeSource={RelativeSource AncestorType=control:OutputControl}, Path=RetryCommand}"
-                            CommandParameter="{Binding}"
-                            Icon="{x:Static ui:FluentSystemIcons.ArrowSync_20_Regular}"
-                            IconSize="{DynamicResource STControlFontSize12}"
-                            ToolTip="{DynamicResource Retry}"
-                            Visibility="{Binding Plugin.TransResult.IsSuccess, Converter={cnvt:BoolToVisibilityInverseConverter}}" />
-
-                        <Button
-                            Padding="5,4"
-                            FlowDirection="LeftToRight"
-                            Style="{StaticResource QuickSettingsButtonStyle}">
+                    </Grid>
+                    <StackPanel Orientation="Horizontal" Visibility="{Binding Plugin.TransResult.Duration, Converter={cnvt:TimeSpanToVisibilityConverter}}" Grid.Column="1" Margin="8,0,0,0" VerticalAlignment="Center">
+                        <StackPanel.Resources>
+                            <Style BasedOn="{StaticResource {x:Type TextBlock}}" TargetType="TextBlock">
+                                <Setter Property="VerticalAlignment" Value="Center" />
+                                <Setter Property="FontSize" Value="{DynamicResource STControlFontSize10}" />
+                                <Setter Property="Opacity" Value="0.7" />
+                                <Setter Property="Margin" Value="5,0,0,0" />
+                            </Style>
+                        </StackPanel.Resources>
+                        <ui:FontIcon Icon="{x:Static ui:FluentSystemIcons.Timer_24_Regular}" Opacity="0.6" />
+                        <TextBlock Text="{Binding Plugin.TransResult.Duration, StringFormat='\{0:ss\\.ff}'}" />
+                        <TextBlock Text="/" Visibility="{Binding Plugin.TransBackResult.Duration, Converter={cnvt:TimeSpanToVisibilityConverter}}" />
+                        <TextBlock Text="{Binding Plugin.TransBackResult.Duration, StringFormat='\{0:ss\\.ff}'}" Visibility="{Binding Plugin.TransBackResult.Duration, Converter={cnvt:TimeSpanToVisibilityConverter}}" />
+                    </StackPanel>
+                    <ikw:SimpleStackPanel Background="Transparent" FlowDirection="RightToLeft" Orientation="Horizontal" Spacing="10" Grid.Column="2" Margin="8,0,0,0">
+                        <control:IconButton Padding="6" Command="{Binding RelativeSource={RelativeSource AncestorType=control:OutputControl}, Path=RetryCommand}" CommandParameter="{Binding}" Icon="{x:Static ui:FluentSystemIcons.ArrowSync_20_Regular}" IconSize="{DynamicResource STControlFontSize12}" ToolTip="{DynamicResource Retry}" Visibility="{Binding Plugin.TransResult.IsSuccess, Converter={cnvt:BoolToVisibilityInverseConverter}}" />
+                        <Button Padding="5,4" FlowDirection="LeftToRight" Style="{StaticResource QuickSettingsButtonStyle}" ToolTip="{DynamicResource ConfigureService}" AutomationProperties.Name="{DynamicResource ConfigureService}">
                             <ui:FontIcon FontSize="{DynamicResource STControlFontSize15}" Icon="{x:Static ui:FluentSystemIcons.Settings_20_Regular}" />
                             <Button.Resources>
                                 <s:BindingProxy x:Key="SvcProxy" Data="{Binding RelativeSource={RelativeSource AncestorType=Expander}, Path=DataContext}" />
@@ -559,10 +505,7 @@
                             </Button.Resources>
                             <ui:FlyoutService.Flyout>
                                 <ui:MenuFlyout Placement="BottomEdgeAlignedRight">
-                                    <MenuItem
-                                        Command="{Binding Source={StaticResource MainVmProxy}, Path=Data.SingleTranslateCommand}"
-                                        CommandParameter="{Binding Source={StaticResource SvcProxy}, Path=Data}"
-                                        Header="{DynamicResource ExecuteTranslation}">
+                                    <MenuItem Command="{Binding Source={StaticResource MainVmProxy}, Path=Data.SingleTranslateCommand}" CommandParameter="{Binding Source={StaticResource SvcProxy}, Path=Data}" Header="{DynamicResource ExecuteTranslation}">
                                         <MenuItem.Icon>
                                             <ui:FontIcon Icon="{x:Static ui:FluentSystemIcons.Translate_20_Regular}" />
                                         </MenuItem.Icon>
@@ -572,18 +515,9 @@
                                         <MenuItem.Icon>
                                             <ui:FontIcon Icon="{x:Static ui:FluentSystemIcons.GlanceHorizontalSparkles_20_Regular}" />
                                         </MenuItem.Icon>
-                                        <MenuItem
-                                            Header="{DynamicResource TransExecAutomatic}"
-                                            IsCheckable="True"
-                                            IsChecked="{Binding Source={StaticResource SvcProxy}, Path=Data.Options.ExecMode, Converter={cnvt:ExecutionModeBoolConverter}, ConverterParameter=Automatic}" />
-                                        <MenuItem
-                                            Header="{DynamicResource TransExecManual}"
-                                            IsCheckable="True"
-                                            IsChecked="{Binding Source={StaticResource SvcProxy}, Path=Data.Options.ExecMode, Converter={cnvt:ExecutionModeBoolConverter}, ConverterParameter=Manual}" />
-                                        <MenuItem
-                                            Header="{DynamicResource TransExecPinned}"
-                                            IsCheckable="True"
-                                            IsChecked="{Binding Source={StaticResource SvcProxy}, Path=Data.Options.ExecMode, Converter={cnvt:ExecutionModeBoolConverter}, ConverterParameter=Pinned}" />
+                                        <MenuItem Header="{DynamicResource TransExecAutomatic}" IsCheckable="True" IsChecked="{Binding Source={StaticResource SvcProxy}, Path=Data.Options.ExecMode, Converter={cnvt:ExecutionModeBoolConverter}, ConverterParameter=Automatic}" />
+                                        <MenuItem Header="{DynamicResource TransExecManual}" IsCheckable="True" IsChecked="{Binding Source={StaticResource SvcProxy}, Path=Data.Options.ExecMode, Converter={cnvt:ExecutionModeBoolConverter}, ConverterParameter=Manual}" />
+                                        <MenuItem Header="{DynamicResource TransExecPinned}" IsCheckable="True" IsChecked="{Binding Source={StaticResource SvcProxy}, Path=Data.Options.ExecMode, Converter={cnvt:ExecutionModeBoolConverter}, ConverterParameter=Pinned}" />
                                     </MenuItem>
                                     <MenuItem Header="{DynamicResource AutoBackTranslation}">
                                         <MenuItem.Style>
@@ -604,28 +538,16 @@
                                                 </Style.Triggers>
                                             </Style>
                                         </MenuItem.Style>
-                                        <MenuItem
-                                            Header="{DynamicResource On}"
-                                            IsCheckable="True"
-                                            IsChecked="{Binding Source={StaticResource SvcProxy}, Path=Data.Options.AutoBackTranslation}" />
-                                        <MenuItem
-                                            Header="{DynamicResource Off}"
-                                            IsCheckable="True"
-                                            IsChecked="{Binding Source={StaticResource SvcProxy}, Path=Data.Options.AutoBackTranslation, Converter={cnvt:BoolInverseConverter}}" />
+                                        <MenuItem Header="{DynamicResource On}" IsCheckable="True" IsChecked="{Binding Source={StaticResource SvcProxy}, Path=Data.Options.AutoBackTranslation}" />
+                                        <MenuItem Header="{DynamicResource Off}" IsCheckable="True" IsChecked="{Binding Source={StaticResource SvcProxy}, Path=Data.Options.AutoBackTranslation, Converter={cnvt:BoolInverseConverter}}" />
                                     </MenuItem>
-                                    <MenuItem
-                                        Command="{Binding Source={StaticResource MainVmProxy}, Path=Data.NavigateCommand}"
-                                        CommandParameter="{Binding Source={StaticResource SvcProxy}, Path=Data}"
-                                        Header="{DynamicResource ConfigureService}">
+                                    <MenuItem Command="{Binding Source={StaticResource MainVmProxy}, Path=Data.NavigateCommand}" CommandParameter="{Binding Source={StaticResource SvcProxy}, Path=Data}" Header="{DynamicResource ConfigureService}">
                                         <MenuItem.Icon>
                                             <ui:FontIcon Icon="{x:Static ui:FluentSystemIcons.Settings_20_Regular}" />
                                         </MenuItem.Icon>
                                     </MenuItem>
                                     <Separator />
-                                    <MenuItem
-                                        Command="{Binding Source={StaticResource MainVmProxy}, Path=Data.CloseServiceCommand}"
-                                        CommandParameter="{Binding Source={StaticResource SvcProxy}, Path=Data}"
-                                        Header="{DynamicResource CloseService}">
+                                    <MenuItem Command="{Binding Source={StaticResource MainVmProxy}, Path=Data.CloseServiceCommand}" CommandParameter="{Binding Source={StaticResource SvcProxy}, Path=Data}" Header="{DynamicResource CloseService}">
                                         <MenuItem.Icon>
                                             <ui:FontIcon Icon="{x:Static ui:FluentSystemIcons.PictureInPictureExit_20_Regular}" />
                                         </MenuItem.Icon>
@@ -634,14 +556,15 @@
                             </ui:FlyoutService.Flyout>
                         </Button>
                     </ikw:SimpleStackPanel>
-                </DockPanel>
+                    <ContentPresenter Content="{Binding}" ContentTemplateSelector="{StaticResource OutputComboBoxSelector}" Grid.Row="1" Grid.ColumnSpan="3" />
+                </Grid>
             </Expander.Header>
             <Expander.Content>
                 <Border
-                    x:Name="ContentBorder"
+                    x:Name="ContentBorder" Padding="6"
                     Background="{DynamicResource {x:Static ui:ThemeKeys.CardBackgroundFillColorDefaultBrushKey}}"
                     ClipToBounds="True"
-                    CornerRadius="4"
+                    CornerRadius="{DynamicResource STRadiusControl}"
                     RenderTransformOrigin="0.5,0">
                     <Border.RenderTransform>
                         <ScaleTransform ScaleY="1" />
@@ -677,17 +600,14 @@
                                     </Style>
                                 </TextBox.Style>
                             </TextBox>
-                            <ikw:SimpleStackPanel
+                            <WrapPanel
                                 Grid.Row="1"
-                                Margin="6,2"
+                                Margin="12,8,12,12"
                                 Orientation="Horizontal"
-                                Spacing="4"
-                                xf:Animations.Primary="{xf:Animate BasedOn={StaticResource ScaleVertically},
-                                                                   Event=Visibility,
-                                                                   Duration=300,
-                                                                   TransformOn=Layout}">
-                                <ikw:SimpleStackPanel.Style>
-                                    <Style TargetType="ikw:SimpleStackPanel">
+
+                                control:SurfaceMotion.IsEnabled="True">
+                                <WrapPanel.Style>
+                                    <Style TargetType="WrapPanel">
                                         <Style.Triggers>
                                             <DataTrigger Binding="{Binding Plugin.TransResult.IsSuccess}" Value="False">
                                                 <Setter Property="Visibility" Value="Collapsed" />
@@ -700,7 +620,7 @@
                                             </DataTrigger>
                                         </Style.Triggers>
                                     </Style>
-                                </ikw:SimpleStackPanel.Style>
+                                </WrapPanel.Style>
                                 <Grid>
                                     <control:IconButton
                                         Command="{Binding RelativeSource={RelativeSource AncestorType=control:OutputControl}, Path=PlayAudioCommand}"
@@ -763,17 +683,14 @@
                                         ToolTip="{DynamicResource SaveToVocabularyWithNote}"
                                         Visibility="{Binding RelativeSource={RelativeSource AncestorType=control:OutputControl}, Path=HasActivedVocabulary, Converter={cnvt:BoolToVisibilityConverter}}" />
                                 </StackPanel>
-                            </ikw:SimpleStackPanel>
+                            </WrapPanel>
                         </Grid>
                         <ikw:SimpleStackPanel
                             x:Name="PART_TransBackPanel"
-                            xf:Animations.Primary="{xf:Animate BasedOn={StaticResource ScaleVertically},
-                                                               Event=Visibility,
-                                                               Duration=300,
-                                                               TransformOn=Layout}"
+                            control:SurfaceMotion.IsEnabled="True"
                             Spacing="3"
                             Visibility="{Binding Plugin.TransBackResult.Text, Converter={cnvt:EqualToVisibilityInverseConverter}}">
-                            <Separator Background="{StaticResource {x:Static ui:ThemeKeys.ContentDialogSeparatorBorderBrushKey}}" />
+                            <Separator Background="{DynamicResource {x:Static ui:ThemeKeys.ContentDialogSeparatorBorderBrushKey}}" />
                             <Grid>
                                 <Grid.RowDefinitions>
                                     <RowDefinition Height="*" />
@@ -804,17 +721,14 @@
                                         </Style>
                                     </TextBox.Style>
                                 </TextBox>
-                                <ikw:SimpleStackPanel
+                                <WrapPanel
                                     Grid.Row="1"
-                                    Margin="6,2"
+                                    Margin="12,8,12,12"
                                     Orientation="Horizontal"
-                                    Spacing="4"
-                                    xf:Animations.Primary="{xf:Animate BasedOn={StaticResource ScaleVertically},
-                                                                       Event=Visibility,
-                                                                       Duration=300,
-                                                                       TransformOn=Layout}">
-                                    <ikw:SimpleStackPanel.Style>
-                                        <Style TargetType="ikw:SimpleStackPanel">
+
+                                    control:SurfaceMotion.IsEnabled="True">
+                                    <WrapPanel.Style>
+                                        <Style TargetType="WrapPanel">
                                             <Style.Triggers>
                                                 <DataTrigger Binding="{Binding Plugin.TransBackResult.IsSuccess}" Value="False">
                                                     <Setter Property="Visibility" Value="Collapsed" />
@@ -827,7 +741,7 @@
                                                 </DataTrigger>
                                             </Style.Triggers>
                                         </Style>
-                                    </ikw:SimpleStackPanel.Style>
+                                    </WrapPanel.Style>
                                     <Grid>
                                         <control:IconButton
                                             Command="{Binding RelativeSource={RelativeSource AncestorType=control:OutputControl}, Path=PlayAudioCommand}"
@@ -873,7 +787,7 @@
                                         CommandParameter="{Binding Plugin}"
                                         Icon="{x:Static ui:FluentSystemIcons.DeleteLines_20_Regular}"
                                         ToolTip="{DynamicResource CloseTransBack}" />
-                                </ikw:SimpleStackPanel>
+                                </WrapPanel>
                             </Grid>
                         </ikw:SimpleStackPanel>
                     </ikw:SimpleStackPanel>

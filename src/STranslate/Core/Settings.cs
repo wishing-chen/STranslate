@@ -47,7 +47,8 @@ public partial class Settings : ObservableObject
     /// <summary>
     /// 是否启用自动检查更新
     /// </summary>
-    [ObservableProperty] public partial bool AutoCheckUpdate { get; set; } = true;
+    // UI 分支默认不检查上游更新，避免更新为官方版本后丢失此界面。
+    [ObservableProperty] public partial bool AutoCheckUpdate { get; set; } = false;
 
     [ObservableProperty] public partial ElementTheme ColorScheme { get; set; }
 
@@ -173,7 +174,7 @@ public partial class Settings : ObservableObject
     [ObservableProperty] public partial double CustomWindowTop { get; set; }
     [ObservableProperty] public partial double MainWindowMaxHeightRatio { get; set; } = 0.85;
 
-    private double _mainWindowWidth = 470;
+    private double _mainWindowWidth = 520;
     public double MainWindowWidth
     {
         get => _mainWindowWidth;

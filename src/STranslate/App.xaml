@@ -9,11 +9,15 @@
             <ResourceDictionary.MergedDictionaries>
                 <ui:ThemeResources />
                 <ui:XamlControlsResources />
+                <ResourceDictionary Source="pack://application:,,,/STranslate;component/Resources/AppleTheme.xaml" />
 
                 <!--  // Animations //  -->
                 <ResourceDictionary Source="pack://application:,,,/XamlFlair.WPF;component/DefaultAnimations.xaml" />
 
                 <ResourceDictionary Source="pack://application:,,,/STranslate;component/Resources/CustomStyles.xaml" />
+
+                <!-- 局部样式使用显式基底，须先于 Generic 中引用它的模板载入。 -->
+                <ResourceDictionary Source="pack://application:,,,/STranslate;component/Controls/IconButton.xaml" />
 
                 <!--  // 在应用程序启动时立即加载 Generic.xaml 避免CustomControl里引入第三方主题StyleResourceKey报错/BaseOn失效的问题 //  -->
                 <ResourceDictionary Source="pack://application:,,,/STranslate;component/Themes/Generic.xaml" />

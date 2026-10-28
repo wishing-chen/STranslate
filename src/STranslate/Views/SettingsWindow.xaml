@@ -13,7 +13,7 @@
     xmlns:vm="clr-namespace:STranslate.ViewModels"
     x:Name="STSettingsWindow"
     Title="{DynamicResource Settings}"
-    Width="1000"
+    Width="1040"
     Height="760"
     MinWidth="940"
     MinHeight="600"
@@ -28,6 +28,7 @@
     Icon="/Resources/app.ico"
     KeyDown="OnKeyDown"
     WindowStartupLocation="CenterScreen"
+    UseLayoutRounding="True"
     mc:Ignorable="d">
     <Window.InputBindings>
         <KeyBinding
@@ -39,7 +40,7 @@
     <Grid>
         <Border
             Height="{Binding ElementName=RootNavigation, Path=CompactPaneLength}"
-            Margin="20,0,0,0"
+            Margin="24,0,0,0"
             VerticalAlignment="Top"
             Background="Transparent"
             IsHitTestVisible="True">
@@ -62,66 +63,68 @@
             IsPaneToggleButtonVisible="False"
             IsTabStop="False"
             IsTitleBarAutoPaddingEnabled="False"
-            OpenPaneLength="240"
+            OpenPaneLength="224"
             PaneDisplayMode="Left"
             SelectionChanged="OnNaviSelectionChanged">
             <ui:NavigationView.Resources>
                 <SolidColorBrush x:Key="NavigationViewContentBackground" Color="Transparent" />
                 <Thickness x:Key="NavigationViewContentMargin">0,48,0,0</Thickness>
                 <Thickness x:Key="NavigationViewContentGridBorderThickness">0</Thickness>
-                <CornerRadius x:Key="NavigationViewContentGridCornerRadius">8,0,0,0</CornerRadius>
+                <CornerRadius x:Key="NavigationViewContentGridCornerRadius">20,0,0,0</CornerRadius>
                 <Thickness x:Key="NavigationViewHeaderMargin">20,0,0,0</Thickness>
                 <sys:Double x:Key="NavigationViewItemOnLeftIconBoxHeight">24</sys:Double>
+                <Style BasedOn="{StaticResource {x:Type ui:NavigationViewItem}}" TargetType="ui:NavigationViewItem">
+                    <Setter Property="MinHeight" Value="40" />
+                    <Setter Property="Margin" Value="6,2" />
+                    <Setter Property="ui:ControlHelper.CornerRadius" Value="{DynamicResource STRadiusControl}" />
+                </Style>
             </ui:NavigationView.Resources>
             <ui:NavigationView.PaneCustomContent>
-                <Grid Margin="0,49,0,25" HorizontalAlignment="Center">
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="50" />
-                        <RowDefinition Height="30" />
-                    </Grid.RowDefinitions>
+                <StackPanel Margin="18,58,12,24" Orientation="Horizontal">
                     <Image
-                        Width="50"
-                        Height="50"
+                        Width="32"
+                        Height="32"
                         Source="/Resources/app.ico" />
                     <TextBlock
-                        Grid.Row="1"
-                        Margin="0,12,0,0"
+                        Margin="10,0,0,0"
                         VerticalAlignment="Center"
+                        FontWeight="SemiBold"
+                        FontSize="18"
                         Text="STranslate"
                         TextAlignment="Center" />
-                </Grid>
+                </StackPanel>
             </ui:NavigationView.PaneCustomContent>
             <ui:NavigationView.MenuItems>
 
                 <ui:NavigationViewItem Content="{DynamicResource General}" Tag="GeneralPage">
                     <ui:NavigationViewItem.Icon>
-                        <ui:BitmapIcon ShowAsMonochrome="False" UriSource="/Resources/settings.png" />
+                        <ui:FontIcon FontSize="20" Icon="{x:Static ui:FluentSystemIcons.Settings_20_Regular}" />
                     </ui:NavigationViewItem.Icon>
                 </ui:NavigationViewItem>
 
                 <ui:NavigationViewItem Content="{DynamicResource Services}" IsExpanded="True">
                     <ui:NavigationViewItem.Icon>
-                        <ui:BitmapIcon ShowAsMonochrome="False" UriSource="/Resources/services.png" />
+                        <ui:FontIcon FontSize="20" Icon="{x:Static ui:FluentSystemIcons.Apps_20_Regular}" />
                     </ui:NavigationViewItem.Icon>
                     <ui:NavigationViewItem.MenuItems>
                         <ui:NavigationViewItem Content="{DynamicResource Translate}" Tag="TranslatePage">
                             <ui:NavigationViewItem.Icon>
-                                <ui:BitmapIcon ShowAsMonochrome="False" UriSource="/Resources/translate.png" />
+                                <ui:FontIcon FontSize="20" Icon="{x:Static ui:FluentSystemIcons.Translate_24_Regular}" />
                             </ui:NavigationViewItem.Icon>
                         </ui:NavigationViewItem>
                         <ui:NavigationViewItem Content="{DynamicResource Ocr}" Tag="OcrPage">
                             <ui:NavigationViewItem.Icon>
-                                <ui:BitmapIcon ShowAsMonochrome="False" UriSource="/Resources/ocr.png" />
+                                <ui:FontIcon FontSize="20" Icon="{x:Static ui:FluentSystemIcons.ScanType_20_Regular}" />
                             </ui:NavigationViewItem.Icon>
                         </ui:NavigationViewItem>
                         <ui:NavigationViewItem Content="{DynamicResource Tts}" Tag="TtsPage">
                             <ui:NavigationViewItem.Icon>
-                                <ui:BitmapIcon ShowAsMonochrome="False" UriSource="/Resources/tts.png" />
+                                <ui:FontIcon FontSize="20" Icon="{x:Static ui:FluentSystemIcons.Speaker2_20_Regular}" />
                             </ui:NavigationViewItem.Icon>
                         </ui:NavigationViewItem>
                         <ui:NavigationViewItem Content="{DynamicResource Vocabulary}" Tag="VocabularyPage">
                             <ui:NavigationViewItem.Icon>
-                                <ui:BitmapIcon ShowAsMonochrome="False" UriSource="/Resources/vocabulary.png" />
+                                <ui:FontIcon FontSize="20" Icon="{x:Static ui:FluentSystemIcons.Book_20_Regular}" />
                             </ui:NavigationViewItem.Icon>
                         </ui:NavigationViewItem>
                     </ui:NavigationViewItem.MenuItems>
@@ -129,43 +132,49 @@
 
                 <ui:NavigationViewItem Content="{DynamicResource Standalone}" Tag="StandalonePage">
                     <ui:NavigationViewItem.Icon>
-                        <ui:BitmapIcon ShowAsMonochrome="False" UriSource="/Resources/windows.png" />
+                        <ui:FontIcon FontSize="20" Icon="{x:Static ui:FluentSystemIcons.WindowAd_24_Regular}" />
                     </ui:NavigationViewItem.Icon>
                 </ui:NavigationViewItem>
 
                 <ui:NavigationViewItem Content="{DynamicResource History}" Tag="HistoryPage">
                     <ui:NavigationViewItem.Icon>
-                        <ui:BitmapIcon ShowAsMonochrome="False" UriSource="/Resources/history.png" />
+                        <ui:FontIcon FontSize="20" Icon="{x:Static ui:FluentSystemIcons.History_20_Regular}" />
                     </ui:NavigationViewItem.Icon>
                 </ui:NavigationViewItem>
 
                 <ui:NavigationViewItem Content="{DynamicResource Plugins}" Tag="PluginPage">
                     <ui:NavigationViewItem.Icon>
-                        <ui:BitmapIcon ShowAsMonochrome="False" UriSource="/Resources/plugins.png" />
+                        <ui:FontIcon FontSize="20" Icon="{x:Static ui:FluentSystemIcons.Box_24_Regular}" />
                     </ui:NavigationViewItem.Icon>
                 </ui:NavigationViewItem>
 
                 <ui:NavigationViewItem Content="{DynamicResource Hotkeys}" Tag="HotkeyPage">
                     <ui:NavigationViewItem.Icon>
-                        <ui:BitmapIcon ShowAsMonochrome="False" UriSource="/Resources/keyboard.png" />
+                        <ui:FontIcon FontSize="20" Icon="{x:Static ui:FluentSystemIcons.Keyboard_24_Regular}" />
                     </ui:NavigationViewItem.Icon>
                 </ui:NavigationViewItem>
 
                 <ui:NavigationViewItem Content="{DynamicResource Network}" Tag="NetworkPage">
                     <ui:NavigationViewItem.Icon>
-                        <ui:BitmapIcon ShowAsMonochrome="False" UriSource="/Resources/network.png" />
+                        <ui:FontIcon FontSize="20" Icon="{x:Static ui:FluentSystemIcons.Globe_20_Regular}" />
                     </ui:NavigationViewItem.Icon>
                 </ui:NavigationViewItem>
 
                 <ui:NavigationViewItem Content="{DynamicResource About}" Tag="AboutPage">
                     <ui:NavigationViewItem.Icon>
-                        <ui:BitmapIcon ShowAsMonochrome="False" UriSource="/Resources/info.png" />
+                        <ui:FontIcon FontSize="20" Icon="{x:Static ui:FluentSystemIcons.Info_24_Regular}" />
                     </ui:NavigationViewItem.Icon>
                 </ui:NavigationViewItem>
 
             </ui:NavigationView.MenuItems>
 
-            <ui:Frame x:Name="RootFrame" />
+            <Border Margin="0,8,12,12"
+                    Background="{DynamicResource CardBackgroundFillColorDefaultBrush}"
+                    BorderBrush="{DynamicResource CardStrokeColorDefaultBrush}"
+                    BorderThickness="1"
+                    CornerRadius="{DynamicResource STRadiusCard}">
+                <ui:Frame x:Name="RootFrame" />
+            </Border>
         </ui:NavigationView>
     </Grid>
 </Window>

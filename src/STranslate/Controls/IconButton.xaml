@@ -4,11 +4,14 @@
     xmlns:control="clr-namespace:STranslate.Controls"
     xmlns:ui="http://schemas.inkore.net/lib/ui/wpf/modern">
 
-    <Style TargetType="{x:Type control:IconButton}">
+    <!-- 显式底座避免局部同类型隐式样式在主题加载时丢失 BasedOn。 -->
+    <Style x:Key="STIconButtonStyle" TargetType="{x:Type control:IconButton}">
         <Setter Property="Padding" Value="5,3" />
+        <Setter Property="MinWidth" Value="32" />
+        <Setter Property="MinHeight" Value="32" />
         <Setter Property="Background" Value="{DynamicResource ControlFillColorDefaultBrush}" />
         <Setter Property="BorderBrush" Value="{DynamicResource ControlElevationBorderBrush}" />
-        <Setter Property="ui:ControlHelper.CornerRadius" Value="6" />
+        <Setter Property="ui:ControlHelper.CornerRadius" Value="{DynamicResource STRadiusControl}" />
         <Setter Property="BorderThickness" Value="1" />
         <Setter Property="IconSize" Value="{DynamicResource STControlFontSize14}" />
         <Setter Property="Template">
@@ -24,6 +27,7 @@
                             BorderThickness="{TemplateBinding BorderThickness}"
                             Command="{TemplateBinding Command}"
                             CommandParameter="{TemplateBinding CommandParameter}"
+                            AutomationProperties.Name="{Binding ToolTip, RelativeSource={RelativeSource TemplatedParent}}"
                             ToolTip="{TemplateBinding ToolTip}"
                             Visibility="Visible">
                             <ui:FontIcon FontSize="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=IconSize, Mode=TwoWay}" Icon="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=Icon}" />
@@ -37,6 +41,7 @@
                             BorderBrush="{TemplateBinding BorderBrush}"
                             BorderThickness="{TemplateBinding BorderThickness}"
                             IsChecked="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=IsOn}"
+                            AutomationProperties.Name="{Binding ToolTip, RelativeSource={RelativeSource TemplatedParent}}"
                             ToolTip="{TemplateBinding ToolTip}"
                             Visibility="Collapsed">
                             <ui:FontIcon FontSize="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=IconSize, Mode=TwoWay}" Icon="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=Icon}" />
@@ -53,4 +58,6 @@
             </Setter.Value>
         </Setter>
     </Style>
+
+    <Style BasedOn="{StaticResource STIconButtonStyle}" TargetType="{x:Type control:IconButton}" />
 </ResourceDictionary>

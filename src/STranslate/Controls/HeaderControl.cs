@@ -1,7 +1,11 @@
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
 using System.Windows.Input;
+using System.Windows.Media;
 using System.Collections.Generic;
+using System.Collections.Specialized;
+using STranslate.Core;
 using STranslate.ViewModels;
 
 namespace STranslate.Controls;
@@ -9,6 +13,12 @@ namespace STranslate.Controls;
 public class HeaderControl : Control
 {
     private Border? _dragBorder;
+
+    public HeaderControl()
+    {
+        SizeChanged += (_, _) => UpdateActionGroups();
+        Unloaded += (_, _) => SetCurrentValue(IsServiceSwitcherOpenProperty, false);
+    }
 
     static HeaderControl()
     {
@@ -473,7 +483,43 @@ public class HeaderControl : Control
             typeof(HeaderControl),
             new FrameworkPropertyMetadata(
                 null,
-                FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
+                FrameworkPropertyMetadataOptions.BindsTwoWayByDefault,
+                OnVisibleActionsChanged));
+
+    public IEnumerable<string> PrimaryActions => (IEnumerable<string>)GetValue(PrimaryActionsProperty);
+    public static readonly DependencyProperty PrimaryActionsProperty =
+        DependencyProperty.Register(nameof(PrimaryActions), typeof(IEnumerable<string>), typeof(HeaderControl),
+            new PropertyMetadata(Array.Empty<string>()));
+
+    public IEnumerable<string> SecondaryActions => (IEnumerable<string>)GetValue(SecondaryActionsProperty);
+    public static readonly DependencyProperty SecondaryActionsProperty =
+        DependencyProperty.Register(nameof(SecondaryActions), typeof(IEnumerable<string>), typeof(HeaderControl),
+            new PropertyMetadata(Array.Empty<string>()));
+
+    private static void OnVisibleActionsChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+    {
+        var header = (HeaderControl)d;
+        if (e.OldValue is INotifyCollectionChanged oldCollection)
+            CollectionChangedEventManager.RemoveHandler(oldCollection, header.OnActionsCollectionChanged);
+        if (e.NewValue is INotifyCollectionChanged newCollection)
+            CollectionChangedEventManager.AddHandler(newCollection, header.OnActionsCollectionChanged);
+        header.UpdateActionGroups();
+    }
+
+    private void OnActionsCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e) => UpdateActionGroups();
+
+    private void UpdateActionGroups()
+    {
+        // 保留用户设置的可见性和组内顺序；窄窗口只将次要操作移到更多菜单。
+        var actions = MainHeaderActions.Normalize(VisibleActions);
+        var compact = ActualWidth > 0 && ActualWidth < 470;
+        var primary = actions.Where(action => action is MainHeaderActions.ScreenshotTranslate
+            or MainHeaderActions.Ocr or MainHeaderActions.ServiceSwitcher
+            || (!compact && action is MainHeaderActions.ImageTranslate or MainHeaderActions.HistoryNavigation)).ToArray();
+        var secondary = actions.Except(primary).ToArray();
+        if (!PrimaryActions.SequenceEqual(primary)) SetCurrentValue(PrimaryActionsProperty, primary);
+        if (!SecondaryActions.SequenceEqual(secondary)) SetCurrentValue(SecondaryActionsProperty, secondary);
+    }
 
     public override void OnApplyTemplate()
     {
@@ -494,6 +540,13 @@ public class HeaderControl : Control
 
     private void OnDragBorderMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
     {
+        if (e.LeftButton != MouseButtonState.Pressed) return;
+        // 模板内部 Border 也可能成为原始来源；逐级排除交互控件，不能只判断来源类型。
+        for (var source = e.OriginalSource as DependencyObject; source != null && source != _dragBorder;)
+        {
+            if (source is ButtonBase or IconButton or MenuItem or TextBoxBase or Selector or Popup) return;
+            source = source is Visual ? VisualTreeHelper.GetParent(source) : LogicalTreeHelper.GetParent(source);
+        }
         Window.GetWindow(this)?.DragMove();
     }
 }

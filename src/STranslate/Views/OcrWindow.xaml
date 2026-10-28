@@ -68,7 +68,7 @@
             </ikw:SimpleStackPanel>
         </Border>
 
-        <Grid Margin="10,48,10,0">
+        <Grid Margin="16,56,16,8">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition d:Width="0">
@@ -108,7 +108,7 @@
                     Background="{DynamicResource {x:Static ui:ThemeKeys.CardBackgroundFillColorDefaultBrushKey}}"
                     BorderBrush="{DynamicResource {x:Static ui:ThemeKeys.CardStrokeColorDefaultBrushKey}}"
                     BorderThickness="1"
-                    CornerRadius="{DynamicResource {x:Static ui:ThemeKeys.ControlCornerRadiusKey}}">
+                    CornerRadius="{DynamicResource STRadiusCard}">
                     <Grid>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="*" />
@@ -366,7 +366,7 @@
                     Background="{DynamicResource {x:Static ui:ThemeKeys.CardBackgroundFillColorDefaultBrushKey}}"
                     BorderBrush="{DynamicResource {x:Static ui:ThemeKeys.CardStrokeColorDefaultBrushKey}}"
                     BorderThickness="1"
-                    CornerRadius="{DynamicResource {x:Static ui:ThemeKeys.ControlCornerRadiusKey}}">
+                    CornerRadius="{DynamicResource STRadiusCard}">
                     <Grid>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="2*" />
@@ -426,13 +426,18 @@
                                 Margin="5"
                                 Visibility="{Binding Result, Converter={cnvt:EqualToVisibilityInverseConverter}}">
                                 <Grid.ColumnDefinitions>
-                                    <ColumnDefinition />
-                                    <ColumnDefinition />
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
                                 </Grid.ColumnDefinitions>
-                                <ikw:SimpleStackPanel
+                                <WrapPanel
+                                    Margin="0,0,8,0"
                                     VerticalAlignment="Bottom"
-                                    Orientation="Horizontal"
-                                    Spacing="5">
+                                    Orientation="Horizontal">
+                                    <WrapPanel.Resources>
+                                        <Style BasedOn="{StaticResource STIconButtonStyle}" TargetType="control:IconButton">
+                                            <Setter Property="Margin" Value="0,2,5,2" />
+                                        </Style>
+                                    </WrapPanel.Resources>
                                     <Grid>
                                         <control:IconButton
                                             Padding="5,3"
@@ -469,7 +474,7 @@
                                         Icon="{x:Static ui:FluentSystemIcons.Spacebar_24_Regular}"
                                         IconSize="14"
                                         ToolTip="{DynamicResource RemoveSpace}" />
-                                </ikw:SimpleStackPanel>
+                                </WrapPanel>
                                 <ikw:SimpleStackPanel
                                     Grid.Column="1"
                                     VerticalAlignment="Bottom"

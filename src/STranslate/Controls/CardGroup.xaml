@@ -32,7 +32,7 @@
                         Background="{DynamicResource SettingsCardBackground}"
                         BorderBrush="{DynamicResource SettingsCardBorderBrush}"
                         BorderThickness="{DynamicResource SettingsCardBorderThickness}"
-                        CornerRadius="{DynamicResource ControlCornerRadius}">
+                        CornerRadius="{DynamicResource STRadiusCard}">
                         <ItemsPresenter />
                     </Border>
                 </ControlTemplate>

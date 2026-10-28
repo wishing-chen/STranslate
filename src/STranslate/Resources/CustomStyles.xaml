@@ -35,6 +35,7 @@
 
     <Style BasedOn="{StaticResource {x:Type TextBox}}" TargetType="TextBox">
         <Setter Property="FontSize" Value="{DynamicResource STControlFontSize14}" />
+        <Setter Property="ui:ControlHelper.CornerRadius" Value="{DynamicResource STRadiusControl}" />
     </Style>
 
     <!--#endregion-->
@@ -92,9 +93,8 @@
                             Margin="4,0,0,0"
                             Padding="5,3"
                             VerticalAlignment="Center"
-                            ui:ControlHelper.CornerRadius="6"
+                            ui:ControlHelper.CornerRadius="{DynamicResource STRadiusControl}"
                             ClickMode="Press"
-                            FocusVisualStyle="{x:Null}"
                             IsChecked="{Binding IsOverflowOpen, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}"
                             IsEnabled="{TemplateBinding HasOverflowItems}"
                             Visibility="{Binding HasOverflowItems, Converter={cnvt:BoolToVisibilityConverter}, RelativeSource={RelativeSource TemplatedParent}}">
@@ -158,7 +158,7 @@
         <Setter Property="Padding" Value="{DynamicResource ExpanderContentPadding}" />
         <Setter Property="HorizontalAlignment" Value="Left" />
         <Setter Property="VerticalAlignment" Value="Center" />
-        <Setter Property="ui:ControlHelper.CornerRadius" Value="{DynamicResource ControlCornerRadius}" />
+        <Setter Property="ui:ControlHelper.CornerRadius" Value="{DynamicResource STRadiusCard}" />
         <Setter Property="OverridesDefaultStyle" Value="True" />
         <Setter Property="HorizontalContentAlignment" Value="Stretch" />
         <Setter Property="VerticalContentAlignment" Value="Stretch" />
@@ -172,7 +172,7 @@
                         <ToggleButton
                             x:Name="ExpanderHeader"
                             MinHeight="{TemplateBinding MinHeight}"
-                            Padding="{DynamicResource ExpanderHeaderHorizontalPadding}"
+                            Padding="14,10"
                             HorizontalAlignment="Stretch"
                             HorizontalContentAlignment="{DynamicResource ExpanderHeaderHorizontalContentAlignment}"
                             VerticalContentAlignment="{DynamicResource ExpanderHeaderVerticalContentAlignment}"
@@ -207,23 +207,12 @@
                                     x:Name="ExpandSite"
                                     HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
                                     VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
-                                    xf:Animations.CombinedBinding="{Binding IsExpanded, RelativeSource={RelativeSource TemplatedParent}}"
-                                    xf:Animations.Primary="{xf:Animate BasedOn={StaticResource ScaleFromTop},
-                                                                       Event=None,
-                                                                       Duration=300,
-                                                                       TransformOn=Layout}"
-                                    xf:Animations.Secondary="{xf:Animate BasedOn={StaticResource ScaleToTop},
-                                                                         Event=None,
-                                                                         Duration=200,
-                                                                         TransformOn=Layout}"
+                                    control:SurfaceMotion.IsEnabled="True"
+                                    Visibility="{Binding IsExpanded, RelativeSource={RelativeSource TemplatedParent}, Converter={cnvt:BoolToVisibilityConverter}}"
                                     ContentTemplateSelector="{TemplateBinding ContentTemplateSelector}"
                                     Focusable="false"
                                     SnapsToDevicePixels="True"
-                                    UseLayoutRounding="True">
-                                    <ContentPresenter.LayoutTransform>
-                                        <ScaleTransform ScaleX="1" ScaleY="0" />
-                                    </ContentPresenter.LayoutTransform>
-                                </ContentPresenter>
+                                    UseLayoutRounding="True" />
                             </Border>
                         </Border>
                     </DockPanel>

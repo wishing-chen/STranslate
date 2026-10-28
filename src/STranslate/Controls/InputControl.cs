@@ -540,7 +540,8 @@ public class InputControl : Control
     {
         base.OnGotFocus(e);
 
-        if (_textBox != null && !_textBox.IsFocused)
+        // 仅转发控件自身的焦点，保留模板内按钮和语言选择器的键盘焦点。
+        if (ReferenceEquals(e.OriginalSource, this) && _textBox != null && !_textBox.IsFocused)
         {
             _textBox.Focus();
             e.Handled = true;
