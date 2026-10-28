@@ -64,7 +64,7 @@
                     Width="72"
                     Height="72"
                     VerticalAlignment="Center"
-                    Source="/Resources/app.ico" />
+                    Source="/Resources/app-logo.png" />
 
                 <ikw:SimpleStackPanel
                     Grid.Column="1"

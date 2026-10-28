@@ -2,7 +2,7 @@
 
 <p>
 <a href="https://github.com/STranslate/STranslate" target="_blank">
-<img align="center" alt="STranslate" width="200" src="./images/favicon.svg" />
+<img align="center" alt="STranslate" width="200" src="./images/favicon.png" />
 </a>
 </p>
 <p>

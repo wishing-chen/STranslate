@@ -45,7 +45,7 @@
             Background="Transparent"
             IsHitTestVisible="True">
             <ikw:SimpleStackPanel Orientation="Horizontal" Spacing="10">
-                <Image Width="20" Source="pack://application:,,,/Resources/app.ico" />
+                <Image Width="20" Source="pack://application:,,,/Resources/app-logo.png" />
                 <TextBlock
                     VerticalAlignment="Center"
                     Style="{DynamicResource CaptionTextBlockStyle}"
@@ -84,7 +84,7 @@
                     <Image
                         Width="32"
                         Height="32"
-                        Source="/Resources/app.ico" />
+                        Source="/Resources/app-logo.png" />
                     <TextBlock
                         Margin="10,0,0,0"
                         VerticalAlignment="Center"

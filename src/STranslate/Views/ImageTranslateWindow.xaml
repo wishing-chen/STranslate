@@ -50,7 +50,7 @@
             Background="Transparent"
             IsHitTestVisible="True">
             <ikw:SimpleStackPanel Orientation="Horizontal" Spacing="10">
-                <Image Width="20" Source="pack://application:,,,/Resources/app.ico" />
+                <Image Width="20" Source="pack://application:,,,/Resources/app-logo.png" />
                 <TextBlock
                     VerticalAlignment="Center"
                     Text="{DynamicResource ImageTranslate}"

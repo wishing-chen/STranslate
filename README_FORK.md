@@ -28,6 +28,10 @@
 
 先读 `src/AGENTS.md`，再读 [UI 设计与维护说明](src/docs/ui-apple-refactor.md)。上游原有 README、许可证和致谢均保留。
 
+本机项目已迁至 `D:\STtranslate`，保留 `outputs/STranslate`（源码）、`outputs/STranslate-Apple`（便携程序）和 `work`（便携 SDK 与缓存）结构。根目录 `STranslate.lnk` 是启动入口。迁移核验后删除旧聊天目录，不保留目录联接或第二份项目。
+
+新 Logo 使用对话箭头组成的 S 图形；程序、通知、欢迎页、空态和 README 共用同一母版。图像生成与导出维护见 [品牌资源说明](src/docs/branding.md)。
+
 ## 已验证与待验证
 
 2026-10-28 在 Windows 本机完成：Release 主程序及 21 个插件编译，274 项自动测试通过；额外加载真实 WPF 资源检查 400/520/800 DIP 宽度、14/24 字号、长服务名和非空结果。实际窗口已检查主界面、设置、更多菜单、Esc 返回输入、服务启停及微软内置翻译成功返回中文结果。
