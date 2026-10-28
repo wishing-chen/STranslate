@@ -167,6 +167,16 @@ public partial class MainWindowViewModel : ObservableObject, IDisposable
 
     [RelayCommand]
     private void ToggleQuickService(Service service) => service.IsEnabled = !service.IsEnabled;
+    [RelayCommand]
+    private void SelectTranslationProvider(Service service)
+    {
+        if (!TranslateService.Services.Contains(service)) return;
+        // 页面上的选择是单选；其它类型服务和各供应商的密钥、提示词保持不变。
+        CancelAllOperations();
+        foreach (var candidate in TranslateService.Services)
+            candidate.IsEnabled = ReferenceEquals(candidate, service);
+        if (service.Options != null) service.Options.ExecMode = ExecutionMode.Automatic;
+    }
 
     #endregion
 

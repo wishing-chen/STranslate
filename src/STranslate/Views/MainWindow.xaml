@@ -133,6 +133,7 @@
 
         <ui:ScrollViewerEx Grid.Row="1" Margin="16,4,6,16" HorizontalScrollBarVisibility="Disabled">
             <StackPanel>
+                <control:TranslationProviderBar Margin="0,0,10,12" />
                 <!--  // LangSelectControl //  -->
                 <Grid
                     Margin="0,0,10,12"
