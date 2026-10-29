@@ -133,10 +133,9 @@
 
         <ui:ScrollViewerEx Grid.Row="1" Margin="16,4,6,16" HorizontalScrollBarVisibility="Disabled">
             <StackPanel>
-                <control:TranslationProviderBar HorizontalAlignment="Left" Margin="0,0,10,8" />
                 <!--  // LangSelectControl //  -->
                 <Grid
-                    Margin="0,0,10,12"
+                    Margin="0,0,10,8"
                     Visibility="{Binding IsLanguageSelectControlVisible, Converter={cnvt:BoolToVisibilityConverter}}">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto" />
@@ -146,6 +145,7 @@
                         <ColumnDefinition Width="*" />
                         <ColumnDefinition Width="Auto" />
                         <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
 
                     <ComboBox
@@ -182,9 +182,11 @@
                         SelectedValue="{Binding Settings.TargetLang}"
                         SelectedValuePath="Value" />
 
+                    <control:TranslationProviderBar Grid.Column="3" Margin="8,0,0,0" VerticalAlignment="Top" />
+
                     <ListBox
                         Grid.Row="1"
-                        Grid.ColumnSpan="3"
+                        Grid.ColumnSpan="4"
                         Margin="0,6,0,0"
                         Padding="0"
                         BorderThickness="0"

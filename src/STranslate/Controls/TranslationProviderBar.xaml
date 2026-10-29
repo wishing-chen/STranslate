@@ -4,10 +4,33 @@
  xmlns:control="clr-namespace:STranslate.Controls"
  xmlns:cnvt="clr-namespace:STranslate.Converters"
  xmlns:ui="http://schemas.inkore.net/lib/ui/wpf/modern">
+ <UserControl.Resources>
+  <Style x:Key="FloatingProviderButton" TargetType="Button">
+   <Setter Property="Width" Value="44"/>
+   <Setter Property="Height" Value="44"/>
+   <Setter Property="Margin" Value="0,5"/>
+   <Setter Property="HorizontalAlignment" Value="Center"/>
+   <Setter Property="Template">
+    <Setter.Value>
+     <ControlTemplate TargetType="Button">
+      <Border x:Name="Circle" CornerRadius="22" Background="{DynamicResource {x:Static ui:ThemeKeys.SolidBackgroundFillColorBaseBrushKey}}"
+       BorderThickness="1" BorderBrush="{DynamicResource SettingsCardBorderBrush}">
+       <Border.Effect><DropShadowEffect Color="Black" BlurRadius="8" ShadowDepth="2" Opacity="0.16"/></Border.Effect>
+       <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+      </Border>
+      <ControlTemplate.Triggers>
+       <Trigger Property="IsMouseOver" Value="True"><Setter TargetName="Circle" Property="BorderBrush" Value="{DynamicResource {x:Static ui:ThemeKeys.AccentTextFillColorPrimaryBrushKey}}"/></Trigger>
+       <Trigger Property="IsKeyboardFocused" Value="True"><Setter TargetName="Circle" Property="BorderBrush" Value="{DynamicResource {x:Static ui:ThemeKeys.AccentTextFillColorPrimaryBrushKey}}"/><Setter TargetName="Circle" Property="BorderThickness" Value="2"/></Trigger>
+       <DataTrigger Binding="{Binding IsEnabled}" Value="True"><Setter TargetName="Circle" Property="BorderBrush" Value="{DynamicResource {x:Static ui:ThemeKeys.AccentTextFillColorPrimaryBrushKey}}"/><Setter TargetName="Circle" Property="BorderThickness" Value="2"/></DataTrigger>
+      </ControlTemplate.Triggers>
+     </ControlTemplate>
+    </Setter.Value>
+   </Setter>
+  </Style>
+ </UserControl.Resources>
  <Grid>
-  <ToggleButton x:Name="Trigger" Height="34" MaxWidth="220" Padding="10,4"
-   ui:ControlHelper.CornerRadius="12" ToolTip="{DynamicResource TranslationProviders}"
-   AutomationProperties.Name="{DynamicResource TranslationProviders}">
+  <ToggleButton x:Name="Trigger" Width="58" Height="36" Padding="8,4"
+   ToolTip="{Binding SelectionLabel, ElementName=Root}" AutomationProperties.Name="{Binding SelectionLabel, ElementName=Root}">
    <ToggleButton.Template>
     <ControlTemplate TargetType="ToggleButton">
      <Border x:Name="Face" CornerRadius="11" Padding="{TemplateBinding Padding}" Background="{DynamicResource SettingsCardBackground}" BorderBrush="{DynamicResource SettingsCardBorderBrush}" BorderThickness="1">
@@ -21,10 +44,12 @@
     </ControlTemplate>
    </ToggleButton.Template>
    <Grid>
-    <Grid.ColumnDefinitions><ColumnDefinition Width="Auto"/><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
-    <Image Width="20" Height="20" Margin="0,0,7,0" Source="{Binding SelectedProvider.IconPath, ElementName=Root, Converter={cnvt:ImagePathToSourceConverter}}"/>
-    <TextBlock Grid.Column="1" VerticalAlignment="Center" TextTrimming="CharacterEllipsis" Text="{Binding SelectionLabel, ElementName=Root}"/>
-    <Path Grid.Column="2" Margin="9,0,0,0" Width="10" Height="6" VerticalAlignment="Center"
+    <Grid.ColumnDefinitions><ColumnDefinition Width="22"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
+    <Image Width="22" Height="22" Source="{Binding SelectedProvider.IconPath, ElementName=Root, Converter={cnvt:ImagePathToSourceConverter}}"/>
+    <TextBlock Text="译" FontSize="14" VerticalAlignment="Center" HorizontalAlignment="Center">
+     <TextBlock.Style><Style TargetType="TextBlock"><Setter Property="Visibility" Value="Collapsed"/><Style.Triggers><DataTrigger Binding="{Binding SelectedProvider, ElementName=Root}" Value="{x:Null}"><Setter Property="Visibility" Value="Visible"/></DataTrigger></Style.Triggers></Style></TextBlock.Style>
+    </TextBlock>
+    <Path Grid.Column="1" Margin="7,0,0,0" Width="10" Height="6" VerticalAlignment="Center"
      Data="M 1,1 L 5,5 L 9,1" Stroke="{Binding Foreground, ElementName=Trigger}" StrokeThickness="1.5"
      StrokeStartLineCap="Round" StrokeEndLineCap="Round" StrokeLineJoin="Round" RenderTransformOrigin=".5,.5">
      <Path.RenderTransform><RotateTransform x:Name="Arrow"/></Path.RenderTransform>
@@ -32,45 +57,26 @@
    </Grid>
   </ToggleButton>
   <control:ServiceSwitcherPopup x:Name="Menu" AllowsTransparency="True" CloseOnSelection="True" DropDown="True"
-   Placement="Bottom" PlacementTarget="{Binding ElementName=Trigger}" VerticalOffset="4"
-   IsExpanded="{Binding IsChecked, ElementName=Trigger, Mode=TwoWay}"
-   DataContext="{Binding DataContext, ElementName=Root}">
-   <Border Width="240" Margin="4,4,4,18" Padding="6" CornerRadius="16"
-    Background="{DynamicResource {x:Static ui:ThemeKeys.SolidBackgroundFillColorBaseBrushKey}}"
-    BorderBrush="{DynamicResource SettingsCardBorderBrush}" BorderThickness="1"
-    KeyboardNavigation.TabNavigation="Cycle" KeyboardNavigation.DirectionalNavigation="Cycle">
+   Placement="Bottom" PlacementTarget="{Binding ElementName=Trigger}" HorizontalOffset="-9" VerticalOffset="1"
+   IsExpanded="{Binding IsChecked, ElementName=Trigger, Mode=TwoWay}" DataContext="{Binding DataContext, ElementName=Root}">
+   <!-- 透明底上逐个悬浮圆钮，留出阴影和位移动画的余量，不绘制整块菜单背景。 -->
+   <Border Width="76" Padding="0,12,0,12" KeyboardNavigation.TabNavigation="Cycle" KeyboardNavigation.DirectionalNavigation="Cycle">
     <StackPanel>
-     <ScrollViewer MaxHeight="300" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
+     <ScrollViewer MaxHeight="324" Padding="6,0" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto" CanContentScroll="False">
       <ItemsControl x:Name="Providers" ItemsSource="{Binding TranslateService.Services}">
        <ItemsControl.ItemTemplate>
         <DataTemplate>
-         <Button Margin="0,2" Padding="0" HorizontalContentAlignment="Stretch"
-          ToolTip="{Binding DisplayName}" AutomationProperties.Name="{Binding DisplayName}"
+         <Button Style="{StaticResource FloatingProviderButton}" ToolTip="{Binding DisplayName}" AutomationProperties.Name="{Binding DisplayName}"
           Command="{Binding DataContext.SelectTranslationProviderCommand, RelativeSource={RelativeSource AncestorType=ItemsControl}}" CommandParameter="{Binding}">
-          <Button.Template>
-           <ControlTemplate TargetType="Button">
-            <Border x:Name="Row" Padding="10,8" CornerRadius="10" Background="Transparent" BorderThickness="1" BorderBrush="Transparent">
-
-   <Grid>
-              <Grid.ColumnDefinitions><ColumnDefinition Width="Auto"/><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
-              <Image Width="24" Height="24" Margin="0,0,10,0" Source="{Binding IconPath, Converter={cnvt:ImagePathToSourceConverter}}"/>
-              <TextBlock Grid.Column="1" VerticalAlignment="Center" Text="{Binding DisplayName}" TextTrimming="CharacterEllipsis"/>
-              <TextBlock x:Name="Selected" Grid.Column="2" Margin="10,0,0,0" Text="✓" VerticalAlignment="Center" Visibility="Hidden" Foreground="{DynamicResource {x:Static ui:ThemeKeys.AccentTextFillColorPrimaryBrushKey}}"/>
-             </Grid>
-            </Border>
-            <ControlTemplate.Triggers>
-             <Trigger Property="IsMouseOver" Value="True"><Setter TargetName="Row" Property="Background" Value="{DynamicResource SettingsCardBackground}"/></Trigger>
-             <Trigger Property="IsKeyboardFocused" Value="True"><Setter TargetName="Row" Property="BorderBrush" Value="{DynamicResource {x:Static ui:ThemeKeys.AccentTextFillColorPrimaryBrushKey}}"/></Trigger>
-             <DataTrigger Binding="{Binding IsEnabled}" Value="True"><Setter TargetName="Selected" Property="Visibility" Value="Visible"/></DataTrigger>
-            </ControlTemplate.Triggers>
-           </ControlTemplate>
-          </Button.Template>
+          <Image Width="30" Height="30" Stretch="Uniform" Source="{Binding IconPath, Converter={cnvt:ImagePathToSourceConverter}}"/>
          </Button>
         </DataTemplate>
        </ItemsControl.ItemTemplate>
       </ItemsControl>
      </ScrollViewer>
-     <Button Margin="0,5,0,0" Padding="10,7" HorizontalContentAlignment="Left" Content="{DynamicResource Settings}" Command="{Binding OpenSettingsCommand}"/>
+     <Button Style="{StaticResource FloatingProviderButton}" Content="+" FontSize="22"
+      ToolTip="{DynamicResource AddTranslationProvider}" AutomationProperties.Name="{DynamicResource AddTranslationProvider}"
+      Command="{Binding OpenSettingsCommand}" Visibility="{Binding ElementName=Providers, Path=HasItems, Converter={cnvt:BoolToVisibilityInverseConverter}}"/>
     </StackPanel>
    </Border>
   </control:ServiceSwitcherPopup>
