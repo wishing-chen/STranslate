@@ -36,6 +36,8 @@ public class ServiceSwitcherPopup : Popup
             (d, e) => ((ServiceSwitcherPopup)d).Animate((bool)e.NewValue)));
 
     public bool CloseOnSelection { get; set; }
+    public bool DropDown { get; set; }
+    public RotateTransform? Indicator { get; set; }
 
     private void Animate(bool open)
     {
@@ -92,7 +94,7 @@ public class ServiceSwitcherPopup : Popup
 
     private void CollectItems(DependencyObject node)
     {
-        if (node is ContentPresenter { DataContext: ViewModels.ServiceQuickAccessItem } presenter)
+        if (node is ContentPresenter presenter && presenter.DataContext is ViewModels.ServiceQuickAccessItem or STranslate.Plugin.Service)
         {
             presenter.RenderTransform = new TranslateTransform();
             _items.Add(presenter);
@@ -123,19 +125,20 @@ public class ServiceSwitcherPopup : Popup
 
     private void ApplyFrame()
     {
+        if (Indicator != null) Indicator.Angle = _progress * 180;
         if (Child == null) return;
         Child.Opacity = Math.Min(1, _progress * 3);
         if (Child.RenderTransform is not TranslateTransform)
             Child.RenderTransform = new TranslateTransform();
-        ((TranslateTransform)Child.RenderTransform).Y = (1 - _progress) * 12;
+        ((TranslateTransform)Child.RenderTransform).Y = (1 - _progress) * (DropDown ? -12 : 12);
         for (var i = 0; i < _items.Count; i++)
         {
             // 延迟作用于已缓动的进度，保持参考动画的固定圆钮尺寸。
-            var rank = _items.Count - 1 - i;
+            var rank = DropDown ? i : _items.Count - 1 - i;
             var delay = Math.Min(rank * .035, .21);
             var t = Math.Clamp((_progress - delay) / (1 - delay), 0, 1);
             _items[i].Opacity = Math.Min(1, t * 1.5);
-            ((TranslateTransform)_items[i].RenderTransform).Y = (1 - t) * (24 + Math.Min(rank, 4) * 12);
+            ((TranslateTransform)_items[i].RenderTransform).Y = (1 - t) * (DropDown ? -12 : 24 + Math.Min(rank, 4) * 12);
         }
     }
 
@@ -177,7 +180,7 @@ public class ServiceSwitcherPopup : Popup
 
     private void OnSelection(object sender, RoutedEventArgs e)
     {
-        if (CloseOnSelection && e.OriginalSource is ToggleButton)
+        if (CloseOnSelection && e.OriginalSource is ButtonBase)
             Dispatcher.InvokeAsync(() => RequestClose(true), DispatcherPriority.Input);
     }
 
@@ -195,6 +198,7 @@ public class ServiceSwitcherPopup : Popup
         var owner = _owner;
         StopRendering();
         _progress = 0;
+        if (Indicator != null) Indicator.Angle = 0;
         SetCurrentValue(IsOpenProperty, false);
         if (IsExpanded) SetCurrentValue(IsExpandedProperty, false);
         _finishing = false;
@@ -218,6 +222,7 @@ public class ServiceSwitcherPopup : Popup
     {
         StopRendering();
         _progress = 0;
+        if (Indicator != null) Indicator.Angle = 0;
         if (IsExpanded && !_finishing)
         {
             _finishing = true;

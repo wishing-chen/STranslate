@@ -17,9 +17,9 @@
     Title="STranslate"
     Width="{Binding Settings.MainWindowWidth, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
     MinWidth="400"
-    MinHeight="200"
+    MinHeight="280"
     MaxHeight="{Binding MainWindowEffectiveMaxHeight, Mode=OneWay}"
-    control:SizeToContentBehavior.PersistentSizeToContent="Height"
+    Height="{Binding Settings.MainWindowHeight, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" SizeToContent="Manual" ResizeMode="CanResize"
     d:DataContext="{d:DesignInstance Type=vm:MainWindowViewModel}"
     d:DesignHeight="800"
     d:DesignWidth="470"
@@ -133,7 +133,7 @@
 
         <ui:ScrollViewerEx Grid.Row="1" Margin="16,4,6,16" HorizontalScrollBarVisibility="Disabled">
             <StackPanel>
-                <control:TranslationProviderBar Margin="0,0,10,12" />
+                <control:TranslationProviderBar HorizontalAlignment="Left" Margin="0,0,10,8" />
                 <!--  // LangSelectControl //  -->
                 <Grid
                     Margin="0,0,10,12"

@@ -174,6 +174,18 @@ public partial class Settings : ObservableObject
     [ObservableProperty] public partial double CustomWindowTop { get; set; }
     [ObservableProperty] public partial double MainWindowMaxHeightRatio { get; set; } = 0.85;
 
+    private double _mainWindowHeight = 560;
+    public double MainWindowHeight
+    {
+        get => _mainWindowHeight;
+        set
+        {
+            if (!double.IsFinite(value) || value < 280) return;
+            if (App.Current?.MainWindow is { IsVisible: false }) return;
+            SetProperty(ref _mainWindowHeight, value);
+        }
+    }
+
     private double _mainWindowWidth = 520;
     public double MainWindowWidth
     {
@@ -387,7 +399,7 @@ public partial class Settings : ObservableObject
 
             if (e.PropertyName == nameof(MainWindowTop) ||
                 e.PropertyName == nameof(MainWindowLeft) ||
-                e.PropertyName == nameof(MainWindowWidth) ||
+                e.PropertyName == nameof(MainWindowWidth) || e.PropertyName == nameof(MainWindowHeight) ||
                 e.PropertyName == nameof(MainWindowMaxHeightRatio) ||
                 e.PropertyName == nameof(AutoTranslateDelayMs) ||
                 e.PropertyName == nameof(SelectedTextFetchTimeoutMs))
